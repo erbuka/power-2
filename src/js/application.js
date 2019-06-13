@@ -322,14 +322,20 @@ export class Application {
         ctx.restore();
         ctx.save();
         {
+            let k = this.fontSize.normal
             this.setShadow();
-            this.setFont(this.fontSize.normal);
+            this.setFont(k);
 
             ctx.fillStyle = "#fff";
             ctx.fillText("Score", this.height / 10, this.height / 10);
 
             ctx.fillStyle = this.colors[this.game.getHighestPower() % this.colors.length];
-            ctx.fillText(this.game.getScore(), this.height / 10, this.height / 10 + this.fontSize.normal * 1.5);
+            ctx.fillText(this.game.getScore(), this.height / 10, this.height / 10 + k * 1.25);
+
+            ctx.fillStyle = "#fff";
+            ctx.fillText("Next", this.height / 10, this.height / 10 + k * 3.75);
+
+            drawSquare(this.height / 10, this.height / 10 + k * 4.5, this.game.next);
         }
     }
 

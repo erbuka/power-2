@@ -20,6 +20,19 @@ export class GameState {
             let idx = indices.fish();
             this.data[idx] = 1;
         }
+
+        this.computeNext();
+    }
+
+    computeNext() {
+        let r = Math.random();
+        for(let i = this.getHighestPower(); i >= 1; i--) {
+            if(r < Math.pow(1/i, 3.0)) {
+                this.next = i;
+                return;
+            }
+        }
+        throw "This shouldn't be thrown";
     }
 
     clone() {
@@ -101,8 +114,10 @@ export class GameState {
         }
 
         if (moves.length > 0) {
-            newState.data[newState.randomFreeSpot()] = 1;
+            newState.data[newState.randomFreeSpot()] = this.next;
         }
+
+        newState.computeNext();
 
         return {
             moves: moves,
