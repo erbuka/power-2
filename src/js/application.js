@@ -9,7 +9,7 @@ const AppState = {
 }
 
 const Constants = {
-    GameTitle: "2^x",
+    GameTitle: "Power 2",
     NewGame: "Press ENTER to Start"
 }
 
