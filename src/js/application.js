@@ -1,5 +1,6 @@
 import { GameState } from './game-state.js';
 import mp3Swipe from '../sound/swipe.mp3';
+import * as hammer from 'hammerjs';
 
 const AppState = {
     Loading: 0,
@@ -33,8 +34,19 @@ export class Application {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
 
+        let h = new hammer(this.canvas);
+
+        h.get('swipe').set({ direction: hammer.DIRECTION_ALL });
+
+
         window.addEventListener("resize", this.resize.bind(this));
-        window.addEventListener("keyup", this.keyup.bind(this));
+        window.addEventListener("keyup", this.input.bind(this));
+        h.on("swipeleft", this.input.bind(this));
+        h.on("swiperight", this.input.bind(this));
+        h.on("swipeup", this.input.bind(this));
+        h.on("swipedown", this.input.bind(this));
+        h.on("tap", this.input.bind(this));
+
 
         document.body.appendChild(this.canvas);
 
@@ -42,14 +54,25 @@ export class Application {
 
         this.startTime = this.prevTime = Date.now();
         window.requestAnimationFrame(this.update.bind(this));
+
+
     }
 
-    keyup(evt) {
-        if (this.state === AppState.MainMenu && evt.keyCode == 13) {
+
+
+    input(evt) {
+
+        let inEnter = (evt.keyCode && evt.keyCode === 13) || (evt.type && evt.type === "tap");
+        let inLeft = (evt.keyCode && evt.keyCode === 37) || (evt.type && evt.type === "swipeleft");
+        let inRight = (evt.keyCode && evt.keyCode === 39) || (evt.type && evt.type === "swiperight");
+        let inUp = (evt.keyCode && evt.keyCode === 38) || (evt.type && evt.type === "swipeup");
+        let inDown = (evt.keyCode && evt.keyCode === 40) || (evt.type && evt.type === "swipedown");
+
+        if (this.state === AppState.MainMenu && inEnter) {
             this.newGame();
         }
 
-        if (this.state === AppState.Score && evt.keyCode == 13) {
+        if (this.state === AppState.Score && inEnter) {
             this.state = AppState.MainMenu;
         }
 
@@ -59,20 +82,16 @@ export class Application {
                 return;
 
             let moveResult = null;
-            switch (evt.keyCode) {
-                case 37: // Left
-                    moveResult = this.game.move("left");
-                    break;
-                case 39: // Right
-                    moveResult = this.game.move("right");
-                    break;
-                case 38: // Up
-                    moveResult = this.game.move("up");
-                    break;
-                case 40: // Down
-                    moveResult = this.game.move("down");
-                    break;
-            }
+
+            if (inLeft)
+                moveResult = this.game.move("left");
+            else if (inRight)
+                moveResult = this.game.move("right");
+            else if (inUp)
+                moveResult = this.game.move("up");
+            else if (inDown)
+                moveResult = this.game.move("down");
+
 
             if (moveResult && moveResult.moves.length > 0) {
 
@@ -103,6 +122,7 @@ export class Application {
 
         }
     }
+
 
     resize() {
         this.width = this.canvas.width = window.innerWidth;
