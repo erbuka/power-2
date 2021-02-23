@@ -1,7 +1,14 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const { GenerateSW } = require('workbox-webpack-plugin');
 const path = require("path");
 
 module.exports = {
+    devServer: {
+        host: '0.0.0.0',//your ip address
+        port: 8080,
+        disableHostCheck: true
+    },
     output: {
         path: path.resolve(__dirname, "docs")
     },
@@ -11,7 +18,7 @@ module.exports = {
     ],
     module: {
         rules: [
-            { test: /\.(mp3)$/, use: "file-loader" },
+            { test: /\.(mp3|ttf)$/, use: "file-loader" },
             { test: /\.html$/, use: "html-loader" },
             {
                 test: /\.css$/,
@@ -23,7 +30,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./src/index.html",
             filename: "./index.html",
-            inject: "head",
-        })
+            inject: "head"
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "./src/icons", to: "./icons" }
+            ]
+        }),
+        new GenerateSW()
     ]
 }

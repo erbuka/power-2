@@ -33,6 +33,9 @@ export class Application {
         this.state = AppState.MainMenu;
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
+        this.sound = {
+            swipe: new Audio(mp3Swipe)
+        }
 
         let h = new hammer(this.canvas);
 
@@ -110,7 +113,7 @@ export class Application {
                     }
                 }));
 
-                new Audio(mp3Swipe).play();
+                this.sound.swipe.play();
 
                 if (!this.nextGame.canMove()) {
                     this.currentGameScore = this.nextGame.getScore();

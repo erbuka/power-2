@@ -1,0 +1,19 @@
+{
+    "short_name": "Power 2",
+    "name": "Power 2",
+    "icons": [
+      {
+        "src": "/icons/logo-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/icons/logo-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "orientation" : "landscape",
+    "start_url": ".",
+    "display": "fullscreen"
+  }
